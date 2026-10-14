@@ -1,36 +1,35 @@
-# NEXT BET — India Consumer AI Intelligence
+# NEXT BET — Simple Research Notebook (v2)
 
-An independent research and interactive investing experiment by Ishaan Singh. Not affiliated with Bessemer Venture Partners.
+An independent research project by Ishaan Singh on where Indian Consumer AI businesses might emerge.
 
-## What is working
-- Responsive, branded investment research site with six original market theses.
-- Research landscape with nine real company/benchmark entries. Explicit classifications distinguish incumbents, enablers and adjacent companies from investable startups.
-- Three opinionated diligence memos with bull/bear cases, falsification tests and citations.
-- A Gemini-backed analyst with three modes: fresh signals, startup screening, red-team. Grounding citations are returned when available.
-- Robust fallback when Gemini is not configured; no fabricated live feed.
-- No database or recurring bill required for the starter implementation.
+## What changed
 
-## Deploy to Vercel (free-first)
-1. Create a **private** GitHub repository (or public if you want the source visible). Upload the contents of this directory to its root. Never upload a real `.env` file.
-2. Vercel → Add New → Project → Import repository. Framework preset: **Other**. Root Directory: repository root. Deploy.
-3. Open [Google AI Studio API keys](https://aistudio.google.com/app/apikey). Create an API key for a free-tier project, subject to current quotas, region and terms.
-4. Vercel → Project → Settings → Environment Variables. Add `GEMINI_API_KEY` with the key value. Add `GEMINI_MODEL` = `gemini-2.5-flash` (or a currently available free-grounded model). Enable for Production, Preview, Development as appropriate. Redeploy.
-5. Test **Intelligence Lab** with a fresh query; verify live source links and grounding banner. Never place the API key in public browser code.
-6. Review autobiographical statements and replace the placeholder LinkedIn link with your actual link. Read every thesis before using it as your application.
+- Removed the command center, radar, scores, company dashboard and investment committee language.
+- Kept three clear experiences: **My theses**, **Challenge a thesis**, and **Research your own idea**.
+- Six short thesis articles explain the belief, reasoning, relevant companies, disconfirming evidence, test plan and starting sources.
+- Gemini runs only when a visitor requests research or a counterargument. Its output is shown separately from Ishaan's own views.
+- Designed for a simple 60–90 second Loom walkthrough.
 
-## Free-tier reality check
-Google's pricing document currently lists free Gemini 2.5 Flash text and up to 500 Google Search-grounded prompts/day on free tier (shared with Flash-Lite), subject to account quotas. Confirm in your own AI Studio project. The API returns 429 when exhausted. It does **not** provide continuously updated saved data: the research is performed on demand and is timestamped. Vercel Hobby has its own limits. Public endpoints can be abused; for a widely shared app, add a real per-IP rate limit, CAPTCHA, or gated access and budget alert before enabling an exposed API key.
+## Deploy on Vercel
 
-## Development and checks
-`npm test` runs data and API validation tests. `npm run check` syntax-checks client/server JS. For local Vercel function preview, install Vercel CLI: `npx vercel dev` and provide a local `.env` containing `GEMINI_API_KEY`. For a no-key visual preview run `python3 -m http.server 8000 --directory public` and open `http://localhost:8000`; the live API will not work in this static-only preview.
+1. Push the contents of this `next-bet` folder to your GitHub repository (root should contain `package.json`, `public/`, `api/` and `vercel.json`).
+2. In Vercel, import or redeploy the repository. Framework preset: **Other**; output directory: **public**, if asked.
+3. Under Vercel Project Settings → Environment Variables, add `GEMINI_API_KEY` using a key from https://aistudio.google.com/app/apikey. Do not put it into public frontend code or into GitHub.
+4. Redeploy and test both "Research the idea" and "Challenge my assumptions". Gemini grounding/quota may vary; no guarantee of free requests or verified real-time findings.
 
-## Editorial standards
-- Category scores are manually assigned **conviction scores**, not data-derived forecasts or real-time metrics.
-- Evidence links support market context. They don't independently establish each speculative thesis.
-- No claims about unverified financing, revenue, active fundraising, usage counts or investments.
-- The company list is illustrative, not exhaustive.
-- The Gemini answer must be cross-checked. AI can hallucinate and generate false inferences even with Search grounding.
-- Stronger next edition: investor-grade founder interview notes, dated funding disclosures, a sourced company database, cohort data, versioned investment memos and a source-reviewed change log.
+## Run checks
 
-## Stack
-Vanilla JS modules + CSS, Vercel Node serverless endpoint, Google Gemini REST API. No npm runtime dependencies or paid subscription required.
+Requires Node.js 20 or later.
+
+```bash
+npm test
+npm run check
+```
+
+## Limitations
+
+- The thesis notes are exploratory opinions, not independent primary market research. Source links are contextual and must be manually reviewed before using in an application.
+- AI research happens on demand, not automatically in the background. Gemini responses can be mistaken and are not a database of reliably updated companies.
+- The original backend uses Google Search grounding; if the API tier/model does not support this for your key, the feature may return an error.
+- Avoid placing confidential company information into the public research form.
+- This project is independent and not affiliated with Bessemer Venture Partners.
