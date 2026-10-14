@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {sectors,companies,memo,sources} from '../public/data.js';import {validatePayload,cleanInput} from '../api/analyze.js';
+test('six unique complete categories',()=>{assert.equal(sectors.length,6);assert.equal(new Set(sectors.map(s=>s.id)).size,6);for(const s of sectors){assert.ok(s.thesis&&s.bear&&s.test&&s.why.length===3);assert.ok(s.score>=0&&s.score<=100);s.sources.forEach(id=>assert.ok(sources[id]));}});
+test('all companies have safe links and valid category',()=>{for(const c of companies){assert.match(c.link,/^https:\/\//);assert.ok(sectors.some(s=>s.id===c.sector));}});
+test('all memos reference category',()=>{assert.equal(memo.length,3);for(const m of memo)assert.ok(sectors.some(s=>s.id===m.id));});
+test('API validates input',()=>{assert.equal(validatePayload({mode:'research',subject:'Indian AI commerce market'}),null);assert.ok(validatePayload({mode:'oops',subject:'Indian AI commerce market'}));assert.ok(validatePayload({mode:'research',subject:'hi'}));assert.equal(cleanInput('  example  '),'example');});
