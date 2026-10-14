@@ -1,5 +1,5 @@
 const LIMIT = 600;
-const MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 export function validate(body){
  if(!body || !['analyze','followup'].includes(body.mode)) return 'Invalid request';
  if(typeof body.thesis !== 'string' || body.thesis.trim().length < 8 || body.thesis.length > LIMIT) return 'Enter a thesis between 8 and 600 characters.';
