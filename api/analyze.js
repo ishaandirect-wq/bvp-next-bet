@@ -20,7 +20,7 @@ function uniqueSources(chunks){const m=new Map(); for(const c of chunks){ const 
 async function gemini(prompt,key){
  const ctrl=new AbortController(); const timeout=setTimeout(()=>ctrl.abort(),45000);
  try{
- const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},signal:ctrl.signal,body:JSON.stringify({systemInstruction:{parts:[{text:SYSTEM}]},contents:[{role:'user',parts:[{text:prompt}]}],tools:[{google_search:{}}],generationConfig:{temperature:0.25,maxOutputTokens:4000}})});
+ const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},signal:ctrl.signal,body:JSON.stringify({systemInstruction:{parts:[{text:SYSTEM}]},contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:0.25,maxOutputTokens:4000}})});
  const data=await r.json();
  if(!r.ok){const e=new Error(r.status===429?'Free API quota reached. Try again later.':`Gemini request failed (${r.status}). Check API key and model access.`);e.status=r.status===429?429:502;throw e;}
  const raw=(data.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('\n');
