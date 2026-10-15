@@ -1,17 +1,16 @@
-# NEXT BET — capital-news reliability update
+# NEXT BET V7 — capital coverage reliability patch
 
-Built from the existing V5 app, preserving `api/analyze.js` (`gemini-3.5-flash-lite`), `/api/analyze.js`, the Bessemer application note, local Past Research, and follow-up questions.
-
-## What changed
-- New `/api/capital-news.js` searches public Google News RSS headlines for recent funding/pullback signals (no API key required).
-- Two sections now show headline, publication date and direct article link rather than a permanent “Not verified” placeholder.
-- The UI calls them **Funding signals** and **Pullback signals** — not verified investor transactions. Inapplicable or inaccessible news returns a plain explanation.
-- The original Gemini model and JSON-generation configuration remain unchanged, with Google Search grounding still disabled. Thus the rest of the investment analysis is preliminary, not independently sourced.
+Only these files changed relative to V6:
+- `api/capital-news.js` — topic-aware headline searches, 4 concurrent RSS queries, conservative capital-event filtering and a direct live Google News search fallback.
+- `public/app.js` — link text differentiates a genuine article source from a search page; clearer research disclosure.
+- `tests/news.test.js` — updated and expanded test coverage.
 
 ## Deploy
-Upload **all** updated `api/` and `public/` files from this project to your existing repository, plus `tests/news.test.js`. Keep your Vercel Environment Variables intact. No new key or dependency needed. `npm test` and `npm run check` validate the code locally.
+Replace the above files in the existing GitHub repository, commit to main, and allow Vercel to redeploy. Do not alter your Gemini environment variables or existing saved history. Browser history remains in the same localStorage key.
 
-## Operational limitations
-News is found by keyword, not a database of verified financing or transactions. Some headlines may be only loosely related to the thesis; users must open and verify source articles. Feeds can throttle/block automated traffic, resulting in a clearly shown empty or unavailable state. Headline links may point through Google News. Historical notes saved in the browser are not automatically re-researched; select **Research again** to update them.
+## Validate
+1. Search `Indian healthtech companies will attract more funding.`
+2. Review 'Funding signals' and 'Pullback signals'. Click **Read source** for a dated headline, or **Search news** to look up an area that lacks matching coverage.
+3. Try an unrelated thesis and revisit Past research. Check that previous entries are still present.
 
-**Before sharing with Bessemer, test two real theses on the deployed URL**, verify each source link and ensure Past Research opens the saved reports. Live RSS and Gemini calls cannot be exercised without Vercel/network access.
+News articles and search results are research leads, not a complete funding database. Public news feeds can be unavailable, and individual articles need manual verification. No production Google News or Gemini calls were performed during offline testing.
