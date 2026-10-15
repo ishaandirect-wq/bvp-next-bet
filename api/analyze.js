@@ -1,3 +1,4 @@
+import {capitalSignals} from './capital-news.js';
 const LIMIT = 600;
 const MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 export function validate(body){
@@ -44,10 +45,15 @@ export default async function handler(req,res){
  try{
  const {mode,thesis,question,prior}=req.body;
  const result=await gemini(mode==='analyze'?analyzePrompt(thesis):followPrompt(thesis,question,prior),process.env.GEMINI_API_KEY,mode==='analyze');
- const common={sources:result.sources,searchQueries:result.searchQueries,generatedAt:new Date().toISOString(),grounded:result.sources.length>0};
+ const common={sources:[],searchQueries:[],generatedAt:new Date().toISOString(),grounded:false};
  if(mode==='followup')return res.status(200).json({...common,answer:result.raw.slice(0,9000)});
- const parsed=sanitizeAnalysis(extractJson(result.raw),result.sources);
+ const parsed=sanitizeAnalysis(extractJson(result.raw),[]);
  if(!parsed) return res.status(502).json({error:result.finishReason==='MAX_TOKENS'?'Research was cut off before completion. Try a shorter thesis.':'The model did not return a usable report. Please try again.'});
- return res.status(200).json({...common,analysis:parsed});
+ // Headline discovery is independent from Gemini's ungrounded analysis.
+ const news=await capitalSignals(thesis);
+ const fallback=(part)=>[{name:'No matching recent headlines',move:news.newsStatus==='unavailable'?'The news feed could not be reached. Try again later.':'No relevant, dated headline was found in the public news feed. This does not mean no activity occurred.'}];
+ parsed.backing=news.backing.length?news.backing:fallback('backing');
+ parsed.pulling_back=news.pulling_back.length?news.pulling_back:fallback('pulling_back');
+ return res.status(200).json({...common,sources:news.sources,capitalNewsStatus:news.newsStatus,analysis:parsed});
  }catch(e){return res.status(e.status||502).json({error:e.name==='AbortError'?'Research timed out. Try again.':e.message||'Research is temporarily unavailable.'});}
 }
