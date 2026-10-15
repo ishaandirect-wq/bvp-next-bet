@@ -28,3 +28,16 @@ Gemini is asked to use Google Search, but grounding depends on the model, servic
 ## Scope
 
 This is deliberately a small personal project, not an enterprise research platform. No user accounts, payments, shared workspace or scheduled refresh.
+
+## Production route fix
+
+The deployed Vercel Node function is available at `/api/analyze.js`; the browser now posts to that exact path. Opening that URL directly in the browser returns `POST required`, which is expected. If a POST still fails, check the Vercel function logs and Gemini configuration.
+
+
+## Application-specific presentation (V5)
+
+This version adds a clearly identified, independent application banner and an anchored personal note (`#note`). It is not official Bessemer branding. The research and notebook interface are unchanged.
+
+**Preserved from the working GitHub setup:** the browser calls `/api/analyze.js`, the API defaults to `gemini-3.5-flash-lite`, and Google Search grounding is disabled to stay within the project's available free-tier quota. As a result, AI-generated market claims are **not live verified research**. Past research remains in this browser's localStorage.
+
+If you have `GEMINI_MODEL` set in Vercel, that environment variable overrides the default. Keep `GEMINI_API_KEY` on the server only.
